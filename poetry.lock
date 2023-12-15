@@ -141,37 +141,37 @@ frozenlist = ">=1.1.0"
 
 [[package]]
 name = "ampel-alerts"
-version = "0.8.3"
+version = "0.9.0"
 description = "Alert support for the Ampel system"
 category = "main"
 optional = true
 python-versions = ">=3.10,<3.12"
 files = [
-    {file = "ampel_alerts-0.8.3-py3-none-any.whl", hash = "sha256:c396e6a8b8ce239e09162095729c64ab7608486bc612b8c38bcc2eb1a9bfe575"},
-    {file = "ampel_alerts-0.8.3.tar.gz", hash = "sha256:fd8079c40a69fd7b49d7b0c911fcc3f454dbb2b93e87d7d8eb2cc6c5d381200b"},
+    {file = "ampel_alerts-0.9.0-py3-none-any.whl", hash = "sha256:c1aefaf2eb8680366f169d3f8e42bd6d5484a5ad235ba6dd3e8b991106d9198c"},
+    {file = "ampel_alerts-0.9.0.tar.gz", hash = "sha256:fec5b003413302906bb55a0ddff7db68d8719a421b216ceff9c241b7d6bb9e32"},
 ]
 
 [package.dependencies]
-ampel-core = ">=0.8.3,<0.9.0"
-ampel-interface = ">=0.8.3,<0.9.0"
+ampel-core = ">=0.9.0,<0.10.0"
+ampel-interface = ">=0.9.0,<0.10.0"
 
 [package.extras]
 docs = ["Sphinx (>=6.1.2,<6.2.0)", "sphinx-autodoc-typehints (>=1.11.1,<2.0.0)", "tomlkit (>=0.11.0,<0.12.0)"]
 
 [[package]]
 name = "ampel-core"
-version = "0.8.6"
+version = "0.9.0"
 description = "Alice in Modular Provenance-Enabled Land"
 category = "main"
 optional = false
 python-versions = ">=3.10,<3.12"
 files = [
-    {file = "ampel_core-0.8.6-py3-none-any.whl", hash = "sha256:c3132fbe9b585a33c4e747d4d79e4ba454368ecb38e917ddc6b9c01c196c89d4"},
-    {file = "ampel_core-0.8.6.tar.gz", hash = "sha256:d0fca9bc7ef33223f962da275b7008aad89355e3d20d5294b97ab8cb02e38126"},
+    {file = "ampel_core-0.9.0-py3-none-any.whl", hash = "sha256:ef1ce0cfec9f6d8963de0d8e00bea3e52649457616cac57c19146dc23837873e"},
+    {file = "ampel_core-0.9.0.tar.gz", hash = "sha256:bd0e8c96985faf3e2befd3db1d3d76a23f4530382efa0ba4199f99432b3c0c4f"},
 ]
 
 [package.dependencies]
-ampel-interface = ">=0.8.7,<0.9.0"
+ampel-interface = ">=0.9.0,<0.10.0"
 appdirs = ">=1.4.4,<2.0.0"
 prometheus-client = ">=0.16,<0.17"
 psutil = ">=5.8.0,<6.0.0"
@@ -190,14 +190,14 @@ slack = ["slack-sdk (>=3.18.1,<4.0.0)"]
 
 [[package]]
 name = "ampel-interface"
-version = "0.8.7"
+version = "0.9.0"
 description = "Base classes for the Ampel analysis platform"
 category = "main"
 optional = false
 python-versions = ">=3.10,<4.0"
 files = [
-    {file = "ampel_interface-0.8.7-py3-none-any.whl", hash = "sha256:2747bd0b52838dde502038b99cecbbeb48e0e3c7c1f113369576ee0818ca7a54"},
-    {file = "ampel_interface-0.8.7.tar.gz", hash = "sha256:a54dfb5e8baa966be84573fdef34b2e4a6b94bc78e86b785deb16183da00f5e6"},
+    {file = "ampel_interface-0.9.0-py3-none-any.whl", hash = "sha256:3d2d2450cb42f2e51141b6fff1ce20436c0b5ccbfb119d82776e1f459b44d5cf"},
+    {file = "ampel_interface-0.9.0.tar.gz", hash = "sha256:c78e0f5c6f1154d8f9182e62fb6eeb3dd0df1c20d355d8bf26277d2579a8eb7c"},
 ]
 
 [package.dependencies]
@@ -211,19 +211,19 @@ docs = ["Sphinx (>=6.0.0,<7.0.0)", "sphinx-autodoc-typehints (>=1.11.1,<2.0.0)",
 
 [[package]]
 name = "ampel-photometry"
-version = "0.8.3"
+version = "0.9.0"
 description = "Photometry add-on for the Ampel system"
 category = "main"
 optional = false
 python-versions = ">=3.10,<3.12"
 files = [
-    {file = "ampel_photometry-0.8.3-py3-none-any.whl", hash = "sha256:22585ce8d3d14364594ceec0a49951aa8e67b067b6ce6c93f76aa9016ec5ec51"},
-    {file = "ampel_photometry-0.8.3.tar.gz", hash = "sha256:b5da53ac73c013ddeb140ce51ea63b9ba5806f96a9651cda3932163b74c456a1"},
+    {file = "ampel_photometry-0.9.0-py3-none-any.whl", hash = "sha256:bce3755d4c16c03edc419b47e306d965f8f9510434f7b1464cbbc5c42588875c"},
+    {file = "ampel_photometry-0.9.0.tar.gz", hash = "sha256:1ec74f9bc04a00211f8f04488b42b1af5673b00e0601d358886e66db68b30735"},
 ]
 
 [package.dependencies]
-ampel-core = ">=0.8.3,<0.9.0"
-ampel-interface = ">=0.8.3,<0.9.0"
+ampel-core = ">=0.9.0,<0.10.0"
+ampel-interface = ">=0.9.0,<0.10.0"
 astropy = ">=5,<6"
 
 [package.extras]
@@ -246,22 +246,22 @@ mpl = ["matplotlib"]
 
 [[package]]
 name = "ampel-ztf"
-version = "0.8.5"
+version = "0.9.0"
 description = "Zwicky Transient Facility support for the Ampel system"
 category = "main"
 optional = true
 python-versions = ">=3.10,<3.12"
 files = [
-    {file = "ampel_ztf-0.8.5-py3-none-any.whl", hash = "sha256:632c0de723a022e741faf368111d046f7aa368f7d34fd9127deb1a661464f6f9"},
-    {file = "ampel_ztf-0.8.5.tar.gz", hash = "sha256:8178162ba493c9239b00357f057db87f53697c6acd3c983a59db1ceea8381d46"},
+    {file = "ampel_ztf-0.9.0-py3-none-any.whl", hash = "sha256:ec6cf0085e924f97e1116f74e121a7ad137f44b0d28c95133ffebd23676eb662"},
+    {file = "ampel_ztf-0.9.0.tar.gz", hash = "sha256:a710b520fc72bb5cef7b6112eddd078e43a9f323651b3f583b9a9c34b0e19422"},
 ]
 
 [package.dependencies]
 aiohttp = ">=3.7.3,<4.0.0"
-ampel-alerts = ">=0.8.3,<0.9.0"
-ampel-core = ">=0.8.6,<0.9.0"
-ampel-interface = ">=0.8.7,<0.9.0"
-ampel-photometry = ">=0.8.3,<0.9.0"
+ampel-alerts = ">=0.9.0,<0.10.0"
+ampel-core = ">=0.9.0,<0.10.0"
+ampel-interface = ">=0.9.0,<0.10.0"
+ampel-photometry = ">=0.9.0,<0.10.0"
 astropy = ">=5.0,<6.0"
 backoff = ">=2.0.0,<3.0.0"
 confluent-kafka = {version = ">=2.0.0,<3.0.0", optional = true, markers = "extra == \"kafka\""}
@@ -274,12 +274,12 @@ scipy = ">=1.9.3,<2.0.0"
 
 [package.extras]
 archive = ["ampel-ztf-archive (>=0.8.0-alpha.0,<0.9.0)"]
-bayes = ["ampel-plot (>=0.8.3,<0.9.0)", "pandas (>=1.5.2,<2.0.0)", "planobs (>=0.6.1,<0.7.0)"]
+bayes = ["ampel-plot (>=0.8.3-3,<0.9.0)", "pandas (>=1.5.2,<2.0.0)", "planobs (>=0.6.1,<0.7.0)"]
 fp = ["pandas (>=1.5.2,<2.0.0)", "planobs (>=0.6.1,<0.7.0)"]
 healpix = ["healpy (>=1.15,<2.0)"]
 kafka = ["confluent-kafka (>=2.0.0,<3.0.0)"]
 light-curve = ["light-curve (>=0.7,<0.8)"]
-plot = ["ampel-plot (>=0.8.3,<0.9.0)"]
+plot = ["ampel-plot (>=0.8.3-3,<0.9.0)"]
 
 [[package]]
 name = "anyio"
@@ -5489,4 +5489,4 @@ ztf = ["ampel-ztf"]
 [metadata]
 lock-version = "2.0"
 python-versions = ">=3.10,<3.12"
-content-hash = "02f3090bc7e033db8700c828eb087eff7b0d10a1bee3499c5d8f8f6ddbf2ced7"
+content-hash = "8b3b091c4bc41a2124a137b96bf49ad5e7dbed4bc8de0b8a0dd9241e15a8ec41"
