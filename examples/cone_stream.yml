@@ -2,6 +2,8 @@ name: cone_stream
 parameters:
 - name: channelname
   value: cone_stream
+- name: op_dir
+  value: /home/flying_dutchman/Downloads/MMA/sn_rate/op
 
 mongo:
   prefix: ConeStreamTokenGenerator
@@ -28,10 +30,9 @@ task:
               debug: true
               resource_name: ztf_stream_token
               cone:
-                ra: 10.0
-                dec: 30.0
-                radius: 0.01
-
+                ra: 260.6324
+                dec: 32.1398
+                radius: 0.3
 - title: NearbyInfantReact
   unit: AlertConsumer
   config:
@@ -44,28 +45,27 @@ task:
           unit: ZTFArchiveAlertLoader
           config:
             resource_name: ztf_stream_token
-              
     shaper: ZiDataPointShaper
-    directives:
+
+    directives: 
     - channel: "{{ job.parameters.channelname }}"
       filter:
         config:
           gaia_excessnoise_sig_max: 999
           gaia_plx_signif: 3
           gaia_pm_signif: 3
-          gaia_rs: 20
+          gaia_rs: -1
           gaia_veto_gmag_max: 20
           gaia_veto_gmag_min: 9
-          min_ndet: 1
-          min_tspan: -99
-          max_tspan: 1
+          min_ndet: 3
+          min_tspan: 0
+          max_tspan: 100
           min_archive_tspan: -99
-          max_archive_tspan: 100
-          min_drb: 0.995
-          min_gal_lat: 14
+          max_archive_tspan: 1000
+          min_gal_lat: -1
           min_rb: 0.3
-          min_sso_dist: 20
-          ps1_confusion_rad: 0         # Turns off PS1 confusion check. Maybe redundnant with drb?
+          min_sso_dist: -1
+          ps1_confusion_rad: 0         
           ps1_confusion_sg_tol: 0.1
           ps1_sgveto_rad: 1
           ps1_sgveto_th: 0.8
@@ -75,3 +75,317 @@ task:
           max_nbad: 2
         on_stock_match: bypass
         unit: DecentFilter
+      ingest: 
+        mux:  
+          unit: ZiMongoMuxer 
+          insert:
+            point_t2:
+            - config: &dl_config
+                datalab_user: eakshay
+                datalab_pwd: E@akshay1998
+              ingest:
+                filter: PPSFilter
+                select: first
+                sort: jd
+              unit: T2LSPhotoZTap
+            - config: &catalog_match_config
+                catalogs:
+                  GLADEv23:
+                    keys_to_append:
+                    - z
+                    - dist
+                    - dist_err
+                    - flag1
+                    - flag2
+                    - flag3
+                    rs_arcsec: 10.
+                    use: extcats
+                  NEDz:
+                    keys_to_append:
+                    - ObjType
+                    - Velocity
+                    - z
+                    rs_arcsec: 10.
+                    use: catsHTM
+                  SDSS_spec:
+                    keys_to_append:
+                    - z
+                    - bptclass
+                    - subclass
+                    rs_arcsec: 10.
+                    use: extcats
+                    all: False
+                  LSPhotoZZou:
+                    keys_to_append:
+                    - photoz
+                    - ra
+                    - dec
+                    - e_photoz
+                    - specz
+                    - _6
+                    - logMassBest
+                    - logMassInf
+                    - logMassSup
+                    rs_arcsec: 10.
+                    use: extcats
+                    pre_filter: null
+                    post_filter: null
+                    all: False
+                  wiseScosPhotoz:
+                    keys_to_append:
+                    - zPhoto_Corr
+                    - ra
+                    - dec
+                    - wiseID
+                    - w1mCorr
+                    - w2mCorr
+                    rs_arcsec: 10.
+                    use: extcats
+                    pre_filter: null
+                    post_filter: null
+                  twoMPZ:
+                    keys_to_append:
+                    - zPhoto
+                    - ra
+                    - dec
+                    - zSpec
+                    rs_arcsec: 10.
+                    use: extcats
+                    pre_filter: null
+                    post_filter: null
+                  PS1_photoz:
+                    keys_to_append:
+                    - raMean
+                    - decMean
+                    - z_phot
+                    - z_photErr
+                    - z_phot0
+                    - _2
+                    rs_arcsec: 10.
+                    use: extcats
+                    pre_filter: null
+                    post_filter: null
+              ingest:
+                filter: PPSFilter
+                select: first
+                sort: jd
+              unit: T2CatalogMatch
+          combine:
+          - state_t2:
+            - unit: T2DigestRedshifts
+              config: &digest_config
+                max_redshift_category: 7
+                t2_dependency:
+                - config: *catalog_match_config
+                  link_override:
+                    filter: PPSFilter
+                    select: first
+                    sort: jd
+                  unit: T2CatalogMatch
+                - config: *dl_config
+                  link_override:
+                    filter: PPSFilter
+                    select: first
+                    sort: jd
+                  unit: T2LSPhotoZTap
+            - unit: T2RunSncosmo
+              config:
+                sncosmo_model_name: salt2
+                redshift_kind: T2DigestRedshifts
+                max_ampelz_group: 7
+                # phaseselect_kind: T2PhaseLimit
+                # unc: 3.
+                tabulator:
+                - unit: ZTFT2Tabulator
+                  # config:
+                  #   reject_outlier_sigma: 1000.
+                  #   flux_max: 3000.
+                plot_props:
+                  tags:
+                    - SALT
+                    - SNCOSMO
+                  file_name:
+                    format_str: "%s_%s_%s.svg"
+                    arg_keys:
+                      - stock
+                      - model
+                      - redshift_kind
+                  title:
+                    format_str: "%s %s %s"
+                    arg_keys:
+                      - stock
+                      - model
+                      - redshift_kind
+                  fig_text:
+                    format_str: "%s %s \nz-source %s \nchisq %.2f ndof %s"
+                    arg_keys:
+                      - stock
+                      - model
+                      - redshift_kind
+                      - chisq
+                      - ndof
+                  width: 10
+                  height: 6
+                  id_mapper: null
+                  disk_save: "{{ job.parameters.op_dir }}"
+                t2_dependency:
+                - config: *digest_config
+                  link_override:
+                    filter: PPSFilter
+                    select: first
+                    sort: jd
+                  unit: T2DigestRedshifts
+                # - config: *phase_config
+                  # unit: T2PhaseLimit
+            unit: ZiT1Combiner
+
+- title: Run T2s
+  unit: T2Worker
+  config:
+    send_beacon: false
+    raise_exc: true
+
+
+- title: React
+  unit: T3Processor
+  config:
+    raise_exc: true
+    execute:
+      - unit: T3ReviewUnitExecutor
+        config:
+          supply:
+            unit: T3DefaultBufferSupplier
+            config:
+              select:
+                unit: T3StockSelector
+                config:
+                  channel: "{{ job.parameters.channelname }}"
+              load:
+                unit: T3SimpleDataLoader
+                config:
+                  directives:
+                    - STOCK
+                    - T1
+                    - T2DOC
+                  channel: "{{ job.parameters.channelname }}"
+          stage:
+            unit: T3SimpleStager
+            config:
+              execute:
+                - unit: TransientTablePublisher
+                  config:
+                    include_stock: true
+                    include_channels: true
+                    fmt: csv
+                    local_path: "{{ job.parameters.op_dir }}"
+                    table_schema:
+                      T2DigestRedshifts:
+                        'Ampel z':
+                          - ampel_z
+                        'Ampel distance':
+                          - ampel_dist
+                      T2RunSncosmo:
+                        'SALT Chisq':
+                          - sncosmo_result
+                          - chisq
+                        'SALT ndof':
+                          - sncosmo_result
+                          - ndof
+                        'SALT x1':
+                          - sncosmo_result
+                          - paramdict
+                          - x1
+                        'SALT x1 err':
+                          - sncosmo_result
+                          - errors
+                          - x1
+                        'SALT c':
+                          - sncosmo_result
+                          - paramdict
+                          - c
+                        'SALT c err':
+                          - sncosmo_result
+                          - errors
+                          - c
+                        'Peak B abs mag':
+                          - fit_metrics
+                          - restpeak_model_absmag_B
+                        'Peak B obs mag':
+                          - fit_metrics
+                          - obspeak_model_B
+                        'Pulls around peak':
+                          - fit_metrics
+                          - absmean_peak_pull
+                        'Det. around peak':
+                          - fit_metrics
+                          - nbr_peak_pulls
+                    transient_table_schema:
+                      T2LSPhotoZTap:
+                        'LSPhotoZ photo-z':
+                          - T2LSPhotoZTap
+                          - z_phot_median
+                        'LSPhotoZ spec-z':
+                          - T2LSPhotoZTap
+                          - z_spec
+                        'LSPhotoZ dist2transient':
+                          - T2LSPhotoZTap
+                          - dist2transient
+                        'LSPhotoZ r':
+                          - T2LSPhotoZTap
+                          - dered_mag_r
+                        'LSPhotoZ z':
+                          - T2LSPhotoZTap
+                          - dered_mag_z
+                        'LSPhotoZ g':
+                          - T2LSPhotoZTap
+                          - dered_mag_g
+                        'LSPhotoZ w1':
+                          - T2LSPhotoZTap
+                          - dered_mag_w1
+                        'LSPhotoZ w2':
+                          - T2LSPhotoZTap
+                          - dered_mag_w2
+                        'LSPhotoZ w3':
+                          - T2LSPhotoZTap
+                          - dered_mag_w3
+                        'LSPhotoZ w4':
+                          - T2LSPhotoZTap
+                          - dered_mag_w4
+                      T2CatalogMatch:
+                        'Glade z':
+                          - GLADEv23
+                          - z
+                        'SDSS spec z':
+                          - SDSS_spec
+                          - z
+                        'NED z':
+                          - NEDz
+                          - z
+                        'NED dist':
+                          - NEDz
+                          - dist2transient
+                        'LS_Zou photo-z':
+                          - LSPhotoZZou
+                          - photoz
+                        'LS_Zou dist':
+                          - LSPhotoZZou
+                          - dist2transient
+                        'WiseCos photo-z':
+                          - wiseScosPhotoz
+                          - zPhoto_Corr
+                        'WiseCos dist':
+                          - wiseScosPhotoz
+                          - dist2transient
+                        'PS1 photo-z (*1000)':
+                          - PS1_photoz
+                          - z_phot
+                        'PS1 photo-z alt (*1000)':
+                          - PS1_photoz
+                          - z_phot0
+                        'PS1 photo-z err (*10000)':
+                          - PS1_photoz
+                          - z_photErr
+  outputs:
+    artifacts:
+      - name: TransientTable
+        path: TransientTable.csv
