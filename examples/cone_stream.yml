@@ -3,7 +3,7 @@ parameters:
 - name: channelname
   value: cone_stream
 - name: op_dir
-  value: /home/flying_dutchman/Downloads/MMA/sn_rate/op
+  value: ./
 
 mongo:
   prefix: ConeStreamTokenGenerator
